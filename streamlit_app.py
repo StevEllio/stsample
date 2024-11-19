@@ -1,12 +1,6 @@
 import streamlit as st
 
-hide_streamlit_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            </style>
-            """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+
 
 if "role" not in st.session_state:
     st.session_state.role = None
@@ -82,3 +76,11 @@ else:
     pg = st.navigation([st.Page(login)])
 
 pg.run()
+
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
