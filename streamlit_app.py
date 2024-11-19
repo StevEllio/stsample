@@ -54,7 +54,7 @@ admin_1 = st.Page(
 )
 admin_2 = st.Page("admin/admin_2.py", title="Admin 2", icon=":material/security:")
 
-account_pages = [logout_page, settings]
+account_pages = [settings,logout_page]
 request_pages = [request_1, request_2]
 respond_pages = [respond_1, respond_2]
 admin_pages = [admin_1, admin_2]
