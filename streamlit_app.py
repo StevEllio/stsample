@@ -3,7 +3,7 @@ import datetime
 
 
 st.set_page_config(page_title='My app', page_icon=":material/thumb_up:", layout="wide")
-
+st.info('This is a purely informational message', icon="ℹ️")
 
 if "role" not in st.session_state:
     st.session_state.role = None
