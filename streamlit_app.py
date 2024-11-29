@@ -1,37 +1,43 @@
 import streamlit as st
 import datetime
 
-st.set_page_config(page_title='My app', page_icon=":material/thumb_up:", layout="wide")
 
-
-
-
-
-st.info('This is a purely informational message', icon="ℹ️")
-
+# add role parameter and set to none
 if "role" not in st.session_state:
     st.session_state.role = None
+        
+# set pages to wide
+st.set_page_config(page_title='My app', page_icon=":material/thumb_up:", layout="wide")
 
-ROLES = [None, "Requester", "Responder", "Admin"]
+hide_header = """
+        [data-testid="stHeader"] {
+            display: none;
+        }
+        """
 
+hide_sidebar_toggle = """
+        [data-testid="stSidebarCollapseButton"] {
+            display: none;
+        }        
+        """
+adjust_padding = """
+        [data-testid="stMainBlockContainer"] {
+            padding-left: 2rem;
+            padding-right: 2rem;
+            padding-top: 0rem;
+        }
+    """
+    
+# hide streamlit toolbars
+hide_stuff = """<style>""" + hide_header + hide_sidebar_toggle + adjust_padding + """</style>"""
+st.markdown(hide_stuff, unsafe_allow_html=True)
 
-def login():
-
-    st.header("Log in")
-    role = st.selectbox("Choose your role", ROLES)
-
-    if st.button("Log in"):
-        st.session_state.role = role
-        st.rerun()
-
-def logout():
-    st.session_state.role = None
-    st.rerun()
-
+# placeholder for info bar
+#st.info('This is a purely informational message', icon="ℹ️")
 
 role = st.session_state.role
 
-logout_page = st.Page(logout, title="Log out", icon=":material/logout:")
+logout_page = st.Page("pages/logout.py", title="Log out", icon=":material/logout:")
 settings = st.Page("pages/settings.py", title="Settings", icon=":material/settings:")
 
 request_1 = st.Page("pages/request/request_1.py", title="Request 1", icon=":material/help:", default=(role == "Requester"))
@@ -41,7 +47,7 @@ respond_2 = st.Page("pages/respond/respond_2.py", title="Respond 2", icon=":mate
 admin_1 = st.Page("pages/admin/admin_1.py", title="Admin 1", icon=":material/person_add:", default=(role == "Admin"))
 admin_2 = st.Page("pages/admin/admin_2.py", title="Admin 2", icon=":material/security:")
 
-st.logo("images/horizontal_blue.png", icon_image="images/icon_blue.png")
+st.logo("images/horizontal_blue.png")
 
 page_dict = {}
 if st.session_state.role in ["Requester", "Admin"]:
@@ -55,8 +61,27 @@ if st.session_state.role == "Admin":
 
 
 # Widgets shared by all the pages
+list_date_periods = {}
+list_date_periods["MTD"] = {"StartDate":datetime.date.today().replace(day=1),"EndDate":datetime.date.today()}
+list_date_periods["YTD"] = {"StartDate":datetime.date.today().replace(day=1,month=1),"EndDate":datetime.date.today()}
 
 
+# set defaults
+selected_start_date = datetime.date.today()
+selected_end_date = datetime.date.today() 
+
+if "sel_date_period" not in st.session_state:
+    st.session_state.sel_date_period = None
+    
+match st.session_state.sel_date_period:
+    case "MTD":
+        selected_start_date = list_date_periods["MTD"]["StartDate"]
+        selected_end_date = list_date_periods["MTD"]["EndDate"]
+    case "YTD":
+        selected_start_date = list_date_periods["YTD"]["StartDate"]
+        selected_end_date = list_date_periods["YTD"]["EndDate"]
+
+st.session_state.sel_date_period = None
 
 
 
@@ -69,10 +94,13 @@ if len(page_dict) > 0:
         
        
         st.subheader('Date')
-        st.date_input("Date range",[datetime.date.today(),datetime.date.today()])
+        st.selectbox("Date period",list(list_date_periods.keys()),key="sel_date_period",placeholder="This updates date range")
+        with st.empty():
+            st.date_input("Date range",[selected_start_date,selected_end_date])
+        st.button("Apply filters")
     pg = st.navigation(page_dict | {"Account": [settings,logout_page]})
 else:
-    pg = st.navigation([st.Page(login)])
+    pg = st.navigation([st.Page("pages/login.py")])
 
 
 
