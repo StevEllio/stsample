@@ -2,6 +2,8 @@ from enum import enum
 import datetime
 
 class DatesFromPeriod(enum):
+    Today = datetime.date.today()
+    Yesterday = datetime.date.today() - 1
     MTD = datetime.date.today().replace(day=1), datetime.date.today()
     YTD = datetime.date.today().replace(day=1,month=1), datetime.date.today()
     
