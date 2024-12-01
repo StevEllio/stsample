@@ -1,7 +1,6 @@
 import streamlit as st
 import datetime
 
-
 # add role parameter and set to none
 if "role" not in st.session_state:
     st.session_state.role = None
@@ -60,12 +59,6 @@ if st.session_state.role == "Admin":
 
 
 
-# Widgets shared by all the pages
-list_date_periods = {}
-list_date_periods["MTD"] = {"StartDate":datetime.date.today().replace(day=1),"EndDate":datetime.date.today()}
-list_date_periods["YTD"] = {"StartDate":datetime.date.today().replace(day=1,month=1),"EndDate":datetime.date.today()}
-
-
 # set defaults
 selected_start_date = datetime.date.today()
 selected_end_date = datetime.date.today() 
@@ -73,15 +66,12 @@ selected_end_date = datetime.date.today()
 if "sel_date_period" not in st.session_state:
     st.session_state.sel_date_period = None
     
-match st.session_state.sel_date_period:
-    case "MTD":
-        selected_start_date = list_date_periods["MTD"]["StartDate"]
-        selected_end_date = list_date_periods["MTD"]["EndDate"]
-    case "YTD":
-        selected_start_date = list_date_periods["YTD"]["StartDate"]
-        selected_end_date = list_date_periods["YTD"]["EndDate"]
 
-st.session_state.sel_date_period = None
+#selected_start_date = utils.DatesFromPeriod.Today
+#selected_end_date = utils.DatesFromPeriod.Today
+
+
+#st.session_state.sel_date_period = None
 
 
 
@@ -94,9 +84,9 @@ if len(page_dict) > 0:
         
        
         st.subheader('Date')
-        st.selectbox("Date period",list(list_date_periods.keys()),key="sel_date_period",placeholder="This updates date range")
-        with st.empty():
-            st.date_input("Date range",[selected_start_date,selected_end_date])
+        #st.selectbox("Date period",utils.DatesFromPeriod().list(),key="sel_date_period",placeholder="This updates date range")
+        #with st.empty():
+            #st.date_input("Date range",[selected_start_date,selected_end_date])
         st.button("Apply filters")
     pg = st.navigation(page_dict | {"Account": [settings,logout_page]})
 else:
