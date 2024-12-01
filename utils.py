@@ -11,5 +11,5 @@ class DatesFromPeriod(enum):
     
     @staticmethod
     def list():
-        return list(map(datetime.date,DatesFromPeriod)
+        return list(map(datetime.date,DatesFromPeriod))
         
